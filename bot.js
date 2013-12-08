@@ -489,24 +489,26 @@
     Command.prototype.functionality = function(data) {};
 
     Command.prototype.hasPrivelege = function() {
-      var user;
-      user = data.users[this.msgData.fromID].getUser();
-      switch (this.rankPrivelege) {
-        case 'host':
-          return user.permission === 5;
-        case 'cohost':
-          return user.permission >= 4;
-        case 'mod':
-          return user.permission >= 3;
-        case 'manager':
-          return user.permission >= 3;
-        case 'bouncer':
-          return user.permission >= 2;
-        case 'featured':
-          return user.permission >= 1;
-        default:
-          return true;
-      }
+      //var user;
+      //user = data.users[this.msgData.fromID].getUser();
+      //switch (this.rankPrivelege) {
+      //  case 'host':
+      //    return user.permission === 5;
+      //  case 'cohost':
+      //    return user.permission >= 4;
+      //  case 'mod':
+      //    return user.permission >= 3;
+      //  case 'manager':
+      //    return user.permission >= 3;
+      //  case 'bouncer':
+      //    return user.permission >= 2;
+      //  case 'featured':
+      //    return user.permission >= 1;
+      //  default:
+      //    return true;
+      //}
+
+      return API.hasPermission(this.msgData.fromID, API.ROLE.RESIDENTDJ);
     };
 
     Command.prototype.commandMatch = function() {
@@ -1405,13 +1407,22 @@
       allowedUserLevels = [];
       user = API.getUser(this.msgData.fromID);
       window.capturedUser = user;
-      if (user.permission > 5) {
+      //if (user.permission > 5) {
+      //  allowedUserLevels = ['user', 'mod', 'host'];
+      //} else if (user.permission > 2) {
+      //  allowedUserLevels = ['user', 'mod'];
+      //} else {
+      //  allowedUserLevels = ['user'];
+      //}
+      
+      if (API.hasPermission(this.msgData.fromID, API.ROLE.COHOST)) {
         allowedUserLevels = ['user', 'mod', 'host'];
-      } else if (user.permission > 2) {
+      } else if (API.hasPermission(this.msgData.fromID, API.ROLE.BOUNCER)) {
         allowedUserLevels = ['user', 'mod'];
       } else {
         allowedUserLevels = ['user'];
       }
+      
       msg = '';
       for (_i = 0, _len = cmds.length; _i < _len; _i++) {
         cmd = cmds[_i];
